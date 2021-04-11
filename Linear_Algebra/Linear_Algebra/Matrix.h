@@ -3,6 +3,7 @@
 // matrix.h (header file)
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 
 using std::cout;
@@ -22,7 +23,6 @@ public:
     // Construtores
     Matrix();
     Matrix(int rows, int cols);
-    Matrix(double matrix[][25], int size);
     Matrix(const int& size);
     Matrix(int rows, int cols, const double& value);
     
@@ -47,6 +47,9 @@ public:
     //imprime matriz na tela
     void print() const;
 
+    //Decomposição LU
+    vector<double> DecomposicaoLU(vector<double>& x);
+
     // faz com que a matriz torne-se uma matriz identidade
     void unit();
 
@@ -58,8 +61,10 @@ public:
 
     //cria a matriz aumentada
     void aumentada(vector<double> &v);
+
     //APlica o método de eliminação de gauss e retorna vetor b
     vector<double> resolveGauss(vector<double> &x);
+
     //destrutor
    ~Matrix();
 

@@ -81,23 +81,7 @@ Matrix::Matrix() {
     m = aux;
 }
 
-Matrix::Matrix(double matrix[][25], int size) {
-    int rows = size;
-    int cols = size;
 
-    double** aux = new double* [rows];
-    for (int i = 0; i < rows; i++)
-    {
-        aux[i] = new double[cols];
-        for (int j = 0; j < cols; j++)
-        {
-             aux[i][j] = matrix[i][j];
-        }
-    }
-    nRows = rows;
-    nCols = cols;
-    m = aux;
-}
 
 
 Matrix::Matrix(const int& size) {
@@ -116,11 +100,12 @@ Matrix::Matrix(const int& size) {
 }
 
 void Matrix::print() const {
+    std::cout << std::fixed << std::setprecision(4);
     for (int i = 0; i < this->nRows; i++) {
         for (int j = 0; j < this->nCols; j++) {
-            cout << m[i][j] << "|";
+            std::cout << m[i][j] << "|";
         }
-        cout << endl;
+        std::cout << endl;
     }
 }
 
@@ -155,8 +140,8 @@ void Matrix::unit() {
         cout << "Impossivel fazer matriz identidade , pois nao e quadrada" << endl;
     }
     else {
-        for (int i = 1; i <= this->getRows(); i++) {
-            for (int j = 1; j <= this->getCols(); j++) {
+        for (int i = 0; i <= this->getRows(); i++) {
+            for (int j = 0; j <= this->getCols(); j++) {
                 if (i == j) {
                     this->m[i][j] = 1.0;
                 }
@@ -179,18 +164,46 @@ void Matrix::aumentada(vector<double>& v) {
     }
 }
 
-/*vector<double> Matrix:: resolveGauss(vector<double> &x) {
-    vector<double> b;
-    int pivo;
-    for (int i = 0; i < this->getCols(); i++) {
-        pivo = this->get(i, i);
-        if (pivo == 0) {
-            break;
+vector<double> Matrix:: resolveGauss(vector<double> &b) {
+    vector<double> x(b.size());
+    int n = b.size();
+    for (int k = 0; k < n - 1; k++ ) {
+        for (int i = k + 1; i < n; i++) {
+            double multiplicador = this->m[i][k] / this->m[k][k];
+            for (int j = 0; j < this->getCols(); j++) {
+                this->m[i][j] = this->m[i][j] - multiplicador * this->m[k][j];
+                
+            }
+            b[i] = b[i] - multiplicador * b[k];
         }
-        for(int j=i)
+        
     }
+
+        
+    vector<double>::iterator it;
+    for (it = b.begin(); it != b.end(); it++) {
+        std::cout << std::fixed << std::setprecision(4);
+        cout << "elemento: " << *it << endl;
+    }
+
+    n = n - 1;
+    x[n] = b[n] / this->m[n][n];
+    for (int i = n-1; i >= 0; i--) {
+        double sum = 0.0;
+        for (int j = i + 1; j <= n; j++) {
+            sum += this->m[i][j] * x[j];
+        }
+        x[i] = (b[i] - sum) / this->m[i][i];
+    }
+    
+    this->print();
+
+
+    
+    return x;
 }
-*/
+
+
 Matrix::~Matrix() {
     for (int i = 0; i <= nRows; i++) {
         delete[] m[i];
