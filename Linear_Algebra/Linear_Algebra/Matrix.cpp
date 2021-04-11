@@ -155,7 +155,17 @@ void Matrix::unit() {
 
 }
 
-
+vector<double> Matrix::getB() {
+    vector<double> b(this->getRows());
+    for (int i = 0; i < this->getRows(); i++) {
+        double sum = 0.0;
+        for (int j = 0; j < this->getCols(); j++) {
+            sum += this->m[i][j];
+        }
+        b[i] = sum;
+    }
+    return b;
+}
 
 void Matrix::aumentada(vector<double>& v) {
     this->setSize(this->getRows(), this->getCols() + 1 );
@@ -164,19 +174,19 @@ void Matrix::aumentada(vector<double>& v) {
     }
 }
 
-vector<double> Matrix:: resolveGauss(vector<double> &b) {
+vector<double> Matrix::resolveGauss(vector<double>& b) {
     vector<double> x(b.size());
     int n = b.size();
-    for (int k = 0; k < n - 1; k++ ) {
+    for (int k = 0; k < n - 1; k++) {
         for (int i = k + 1; i < n; i++) {
             double multiplicador = this->m[i][k] / this->m[k][k];
             for (int j = 0; j < this->getCols(); j++) {
                 this->m[i][j] = this->m[i][j] - multiplicador * this->m[k][j];
-                
+
             }
             b[i] = b[i] - multiplicador * b[k];
         }
-        
+
     }
 
         
@@ -188,7 +198,7 @@ vector<double> Matrix:: resolveGauss(vector<double> &b) {
 
     n = n - 1;
     x[n] = b[n] / this->m[n][n];
-    for (int i = n-1; i >= 0; i--) {
+    for (int i = n - 1; i >= 0; i--) {
         double sum = 0.0;
         for (int j = i + 1; j <= n; j++) {
             sum += this->m[i][j] * x[j];
@@ -203,6 +213,31 @@ vector<double> Matrix:: resolveGauss(vector<double> &b) {
     return x;
 }
 
+
+vector<double> Matrix::gaussJordan(vector<double>& x) {
+
+    vector<double> res(this->getRows());
+    this->aumentada(x);
+    int i, j, k, n =2; // declare variables and matrixes as
+    //to find the elements of diagonal matrix
+    double element;
+    for (j = 0; j <= n; j++) {
+        for (i = 0; i <= n; i++) {
+            if (i != j) {
+                element = this->m[i][j] / this->m[j][j];
+                for (k = 0; k <= n + 1; k++) {
+                    this->m[i][k] = this->m[i][k] - element * this->m[j][k];
+                }
+            }
+        }
+    }
+    cout << "\nThe solution is:\n";
+    for (i = 0; i <= n; i++) {
+        res[i] = this->m[i][n + 1] / this->m[i][i];
+        cout << "x" << i << "=" << res[i] << " ";
+    }
+    return res;
+}
 
 Matrix::~Matrix() {
     for (int i = 0; i <= nRows; i++) {

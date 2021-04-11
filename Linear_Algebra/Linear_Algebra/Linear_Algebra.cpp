@@ -17,28 +17,32 @@ int main()
     
 
     Matrix *m = new Matrix(3,3);
-    m->setElement(0, 0, 3.0);
-    m->setElement(0, 1, 2.0);
-    m->setElement(0, 2, 4.0);
-   // m->setElement(0, 3, 1.7);
+  
+    m->setElement(0, 0, 2.0);
+    m->setElement(0, 1, 3.0);
+    m->setElement(0, 2, -1.0);
+
+
     m->setElement(1, 0, 1.0);
     m->setElement(1, 1, 1.0);
-    m->setElement(1, 2, 2.0);
-  //  m->setElement(1, 3, 3.5);
-    m->setElement(2, 0, 4.0);
-    m->setElement(2, 1, 3.0);
-    m->setElement(2, 2, -2.0);
-  //  m->setElement(2, 3, 5.0);
-  //  m->setElement(3, 0, 4.5);
-  //  m->setElement(3, 1, -4.0);
-  //  m->setElement(3, 2, 2.5);
-  //  m->setElement(3, 3, 1.5);
+    m->setElement(1, 2, 1.0);
+
+
+    m->setElement(2, 0, -1.0);
+    m->setElement(2, 1, -2.0);
+    m->setElement(2, 2, 3.0);
+
+ 
+    
     
 
-
-    vector<double> b = { 1.0, 2.0, 3.0 };
-    vector<double> res = m->resolveGauss(b);
-    printVector(res);
+    m->print();
+    vector<double> x = {-7.0, 4.0, 15.0};
+    vector<double> res = m->gaussJordan(x);
+    cout << endl;
+    m->print();
+    
+    
     
     
     // m->aumentada(x);

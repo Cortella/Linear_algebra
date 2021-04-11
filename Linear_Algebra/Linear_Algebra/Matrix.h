@@ -37,7 +37,7 @@ public:
     double** getMatrix() { return this->m; }
     int getRows() const { return this->nRows; }
     int getCols() const { return this->nCols; };
-
+    vector<double> getB();
     //retorna elemento especifico
     double get(int row, int col) const { return this->m[row][col]; }
 
@@ -64,6 +64,9 @@ public:
 
     //APlica o método de eliminação de gauss e retorna vetor b
     vector<double> resolveGauss(vector<double> &x);
+
+    //aplica metodo de eliminacao de gauss jordam
+    vector<double> gaussJordan(vector<double>& x);
 
     //destrutor
    ~Matrix();
