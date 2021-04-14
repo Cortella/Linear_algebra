@@ -3,10 +3,20 @@
 
 
 
-Matrix::Matrix(const Matrix& that) {
-    *this = that;
-}
 
+
+Matrix::Matrix(Matrix* x) {
+    double** aux =  new double* [x->getRows()];;
+    for (int i = 0; i < x->getRows(); i++) {
+        aux[i] = new double[x->getCols()];
+        for (int j = 0; j < this->getCols(); j++) {
+            aux[i][j] = x->m[i][j];
+        }
+    }
+    this->nRows = x->getRows();
+    this->nCols = x->getCols();
+    this->m = aux;
+}
 void Matrix::setSize(int rows, int cols) {
     double** aux;
     aux = new double* [rows];
@@ -27,18 +37,67 @@ void Matrix::setSize(int rows, int cols) {
     this->m = aux;
     
 }
-Matrix::Matrix(int rows, int cols) {
+
+void Matrix::hilbert(int size) {
+
+}
+Matrix::Matrix(int rows, int cols, char mat) {
     double** aux;
-    aux = new double* [rows];
+    aux = new double* [cols];
+    vector<double> base;
+    double value;
+    for (int i = 0; i < rows; i++) {
+       base.push_back(1.0 + i);
+    }
+
         for (int i = 0; i < rows; i++)
         {
             aux[i] = new double[cols];
-            switch (rows) {
-                case 5:
+            switch (mat) {
+                case 'h':
                     for (int j = 0; j < cols; j++)
                     {
-                        double result = 1.0 / (i + j + 1);
+                        double result = 1.0 / (1.0*i + j + 1.0);
                         aux[i][j] = result;
+                    }
+                    break;
+
+                case 'c' :
+                    for (int j = 0; j < cols; j++)
+                    {
+                        double result = 1.0 / (1.0*i + j + 2.0);
+                        aux[i][j] = result;
+                    }
+                    break;
+                case 'v':
+                    
+                    for (int j = 0; j < cols; j++)
+                    {
+                        if (i == 0) {
+                            aux[i][j] = 1.0;
+                        }
+                        else if (i == 1) {
+                            aux[i][j] = base[j];
+                        }
+                        else {
+                            aux[i][j] = 0.0;
+                            aux[i][j] = pow(base[j], i);
+                        }
+                        
+                    }
+                    break;
+                case 't':
+                    for (int j = 0; j < cols; j++)
+                    {
+                        if (i == j) {
+                            aux[i][j] = 1.0;
+                        }
+                        else if (j < i) {
+                            aux[i][j] = base.back() + j + 1.0;
+                        }
+                        else {
+                            aux[i][j] = j+ 1.0 -i;
+                        }
                     }
                     break;
                 default:
@@ -180,6 +239,8 @@ vector<double> Matrix::resolveGauss(vector<double>& b) {
     for (int k = 0; k < n - 1; k++) {
         for (int i = k + 1; i < n; i++) {
             double multiplicador = this->m[i][k] / this->m[k][k];
+            cout << "i = " << i << endl;
+            cout << "k = " << k << endl;
             for (int j = 0; j < this->getCols(); j++) {
                 this->m[i][j] = this->m[i][j] - multiplicador * this->m[k][j];
 
@@ -239,9 +300,109 @@ vector<double> Matrix::gaussJordan(vector<double>& x) {
     return res;
 }
 
+vector<int> Matrix::getP() {
+    vector<int> p(this->getRows());
+    for (int i = 0; i < p.size(); i++) {
+        p[i] = i + 1;
+    }
+    return p;
+}
+
+void Matrix::id() {
+    for (int i = 0; i < this->getRows(); i++) {
+        this->m[i][i] = 1.0;
+    }
+}
+
+vector<double> Matrix::decomposicaoLU(vector<double>& x) {
+    vector<double> b(this->getRows());
+    vector<int> p = this->getP();
+    Matrix* L = new Matrix(this->getRows(), this->getCols());
+    L->id();
+    Matrix* U = new Matrix(this->getRows(), this->getCols());
+    L->print();
+
+    int n = b.size();
+    
+    for (int k = 0; k < n - 1; k++) {
+        double pivo = this->m[k][k];
+        for (int i = k + 1; i < n; i++) {
+            double multiplicador = this->m[i][k] / pivo;
+            L->m[i][k] = multiplicador;
+            for (int j = 0; j < this->getCols(); j++) {
+                this->m[i][j] = this->m[i][j] - multiplicador * this->m[k][j];
+
+            }
+        }
+
+    }
+    return b;
+}
+
+
+bool checkJacobi() {
+    /*
+    if () {
+        return false;
+    }
+    return true;
+    */
+    return true;
+}
+
+void Matrix::createXn(vector<double> &b) {
+    vector<double> pivo(this->getCols());
+    for (int i = 0; i < pivo.size(); i++) {
+        pivo[i] = this->m[i][i];
+    }
+
+    for (int i = 0; i < this->getRows(); i++) {
+        for (int j = 0; j < this->getCols(); j++) {
+            if (i == j) {
+                this->m[i][j] = b[i];    
+            }
+            else {
+                this->m[i][j] = -1 * this->m[i][j] / pivo[i];
+            }
+        }
+    }
+}
+
+vector<double> Matrix::jacobi(vector<double>& b) {
+    this->createXn(b);
+    vector<double> x(this->getRows(), 0.0);
+    vector<double> res = x;
+    vector<double> error(this->getRows(), 0.0);
+    
+    int stop = 3;
+    int c = 0;
+    
+    while (c < stop) {
+    /*
+        for (int i = 0; i < this->getRows(); i++) {
+            double result = 0.0;
+            for (int j = 0; this->getRows() ; j++) {
+                if (i != j) {
+                    result = result + 1;//   result += this->m[i][j] * x[j];
+                } else {
+                    result += this->m[i][j];
+                }
+            }
+           // res[i] = result;
+        }
+       // x = res;
+        */
+        c++;
+    }
+ 
+    return x;
+}
+
+
 Matrix::~Matrix() {
     for (int i = 0; i <= nRows; i++) {
         delete[] m[i];
     }
     delete[] m;
 }
+

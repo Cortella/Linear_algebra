@@ -18,15 +18,31 @@ private:
     int nRows;  // numero de linhas
     int nCols;  //  numero de colunas
 
+    
 public:
 
+    //cria matriz de hilbert de  tamanho variavel
+    void hilbert(int size);
+
+    //Cria matriz de toepliz de tamanho variavel
+    void toepliz(int size);
+    
+
+    //cria matriz de cauch de tamanho variavel
+    void vandermond(int size);
+
+    //Cria matriz de cauchy com tamanho variavel 
+    void cauchy(int size);
+
+    //cria matriz de cauchy
     // Construtores
     Matrix();
-    Matrix(int rows, int cols);
+    Matrix(Matrix *x);
+    Matrix(int rows, int cols, char mat = 'm');
     Matrix(const int& size);
     Matrix(int rows, int cols, const double& value);
     
-    Matrix(const Matrix& that);
+    
 
     //setters
     void setSize(int rows, int cols);
@@ -41,6 +57,10 @@ public:
     //retorna elemento especifico
     double get(int row, int col) const { return this->m[row][col]; }
 
+    void id();
+
+
+    vector<int> getP();
     // transforma *this em sua transposta
     void transpose();
 
@@ -48,7 +68,7 @@ public:
     void print() const;
 
     //Decomposição LU
-    vector<double> DecomposicaoLU(vector<double>& x);
+    vector<double> decomposicaoLU(vector<double>& x);
 
     // faz com que a matriz torne-se uma matriz identidade
     void unit();
@@ -65,6 +85,10 @@ public:
     //APlica o método de eliminação de gauss e retorna vetor b
     vector<double> resolveGauss(vector<double> &x);
 
+    //Abertos
+    //jacobi
+    void createXn(vector<double> &b);
+    vector<double> jacobi(vector<double> &x);
     //aplica metodo de eliminacao de gauss jordam
     vector<double> gaussJordan(vector<double>& x);
 

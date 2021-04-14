@@ -5,6 +5,11 @@
 #include "Matrix.h"
 #include <stdlib.h>
 
+#define HILBERT 'h'
+#define VANDERMOND 'v'
+#define CAUCHY 'c'
+#define TOEPLITZ 't'
+
 void printVector(vector<double> m) {
     vector<double>::iterator i;
     for (i = m.begin(); i != m.end(); i++) {
@@ -15,39 +20,43 @@ void printVector(vector<double> m) {
 int main()
 {
     
-
-    Matrix *m = new Matrix(3,3);
-  
-    m->setElement(0, 0, 2.0);
+    
+    Matrix *m = new Matrix(5,5, TOEPLITZ);
+    m->print();
+  /*
+    m->setElement(0, 0, 6.0);
     m->setElement(0, 1, 3.0);
-    m->setElement(0, 2, -1.0);
+    m->setElement(0, 2, 1.0);
 
 
-    m->setElement(1, 0, 1.0);
-    m->setElement(1, 1, 1.0);
-    m->setElement(1, 2, 1.0);
+    m->setElement(1, 0, 4.0);
+    m->setElement(1, 1, 9.0);
+    m->setElement(1, 2, -3.0);
 
 
-    m->setElement(2, 0, -1.0);
-    m->setElement(2, 1, -2.0);
+    m->setElement(2, 0, 1.0);
+    m->setElement(2, 1, -1.0);
     m->setElement(2, 2, 3.0);
 
  
     
     
 
+    //m->print();
+    vector<double> x = {10.0, 16.0, 14.0};
+    vector<double> res = m->jacobi(x);
+    printVector(res);
     m->print();
-    vector<double> x = {-7.0, 4.0, 15.0};
-    vector<double> res = m->gaussJordan(x);
-    cout << endl;
-    m->print();
+
+    
+   // m->print();
     
     
     
     
     // m->aumentada(x);
     // m->print();
-
+    */
     system("pause");
 
 }
