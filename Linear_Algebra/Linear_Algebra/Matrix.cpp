@@ -5,18 +5,7 @@
 
 
 
-Matrix::Matrix(Matrix* x) {
-    double** aux =  new double* [x->getRows()];;
-    for (int i = 0; i < x->getRows(); i++) {
-        aux[i] = new double[x->getCols()];
-        for (int j = 0; j < this->getCols(); j++) {
-            aux[i][j] = x->m[i][j];
-        }
-    }
-    this->nRows = x->getRows();
-    this->nCols = x->getCols();
-    this->m = aux;
-}
+
 void Matrix::setSize(int rows, int cols) {
     double** aux;
     aux = new double* [rows];
@@ -350,50 +339,62 @@ bool checkJacobi() {
     return true;
 }
 
-void Matrix::createXn(vector<double> &b) {
-    vector<double> pivo(this->getCols());
-    for (int i = 0; i < pivo.size(); i++) {
-        pivo[i] = this->m[i][i];
-    }
 
+vector<double> Matrix::getG(vector<double>& b) {
+    vector<double> g;
     for (int i = 0; i < this->getRows(); i++) {
+        double pivo = this->m[i][i];
         for (int j = 0; j < this->getCols(); j++) {
             if (i == j) {
-                this->m[i][j] = b[i];    
+                this->m[i][j] = 0.0;
             }
             else {
-                this->m[i][j] = -1 * this->m[i][j] / pivo[i];
+                this->m[i][j] = -1 * this->m[i][j] / pivo;
             }
         }
+        g.push_back(b[i] / pivo);
     }
+    return g;
+}
+
+vector<double> Matrix::getX(vector<double>& x, vector<double> &g) {
+    vector<double> x1;
+    for (int i = 0; i < this->getRows(); i++) {
+        double result = 0.0;
+        for (int j = 0; j < this->getCols(); j++) {
+            result += this->m[i][j] * x[j];      
+        }
+        result += g[i];
+        x1.push_back(result);
+    }
+    
+    return x1;
 }
 
 vector<double> Matrix::jacobi(vector<double>& b) {
-    this->createXn(b);
-    vector<double> x(this->getRows(), 0.0);
-    vector<double> res = x;
-    vector<double> error(this->getRows(), 0.0);
+    vector<double> g = this->getG(b);
+    vector<double> x;
+    vector<double> x1;
+    x.push_back(0.0);
+    x.push_back(0.0);
+    x.push_back(0.0);
     
-    int stop = 3;
-    int c = 0;
+    int stop = 50;
+    int  c = 0;
     
-    while (c < stop) {
-    /*
-        for (int i = 0; i < this->getRows(); i++) {
-            double result = 0.0;
-            for (int j = 0; this->getRows() ; j++) {
-                if (i != j) {
-                    result = result + 1;//   result += this->m[i][j] * x[j];
-                } else {
-                    result += this->m[i][j];
-                }
-            }
-           // res[i] = result;
+    while (c < 2) {
+        
+        x1 = getX(x,g);
+        vector<double>::iterator i;
+        for (i = x1.begin(); i != x1.end(); i++) {
+            cout << *i << endl;
         }
-       // x = res;
-        */
+        x = x1;
         c++;
+       
     }
+    
+
  
     return x;
 }

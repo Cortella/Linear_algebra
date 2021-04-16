@@ -21,32 +21,32 @@ int main()
 {
     
     
-    Matrix *m = new Matrix(5,5, TOEPLITZ);
-    m->print();
-  /*
-    m->setElement(0, 0, 6.0);
-    m->setElement(0, 1, 3.0);
-    m->setElement(0, 2, 1.0);
+    Matrix *m = new Matrix(3,3);
+   
+ 
+    m->setElement(0, 0, 15.0);
+    m->setElement(0, 1, 5.0);
+    m->setElement(0, 2, -5.0);
 
 
     m->setElement(1, 0, 4.0);
-    m->setElement(1, 1, 9.0);
-    m->setElement(1, 2, -3.0);
+    m->setElement(1, 1, 10.0);
+    m->setElement(1, 2, 1.0);
 
 
-    m->setElement(2, 0, 1.0);
-    m->setElement(2, 1, -1.0);
-    m->setElement(2, 2, 3.0);
+    m->setElement(2, 0, 2.0);
+    m->setElement(2, 1, -2.0);
+    m->setElement(2, 2, 8.0);
 
  
     
     
 
+
+    vector<double> b = {30.0, 23.0, -10.0};
+    vector<double> res = m->jacobi(b);
+    //printVector(res);
     //m->print();
-    vector<double> x = {10.0, 16.0, 14.0};
-    vector<double> res = m->jacobi(x);
-    printVector(res);
-    m->print();
 
     
    // m->print();
@@ -56,7 +56,7 @@ int main()
     
     // m->aumentada(x);
     // m->print();
-    */
+   
     system("pause");
 
 }

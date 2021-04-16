@@ -37,6 +37,7 @@ public:
     //cria matriz de cauchy
     // Construtores
     Matrix();
+    // cria matriz B de jacobi
     Matrix(Matrix *x);
     Matrix(int rows, int cols, char mat = 'm');
     Matrix(const int& size);
@@ -59,7 +60,7 @@ public:
 
     void id();
 
-
+  
     vector<int> getP();
     // transforma *this em sua transposta
     void transpose();
@@ -87,7 +88,11 @@ public:
 
     //Abertos
     //jacobi
-    void createXn(vector<double> &b);
+
+   
+    vector<double> getG(vector<double>& b);
+
+    vector<double> getX(vector<double>& x,vector<double> &g);
     vector<double> jacobi(vector<double> &x);
     //aplica metodo de eliminacao de gauss jordam
     vector<double> gaussJordan(vector<double>& x);
