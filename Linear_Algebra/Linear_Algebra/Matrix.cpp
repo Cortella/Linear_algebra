@@ -167,41 +167,6 @@ void Matrix::transpose() {
     *this = matriz;
 }
 
-void Matrix::zeros() {
-    for (int i = 0; i < this->getRows(); i++) {
-        for (int j = 0; j < this->getCols(); j++) {
-            this->m[i][j] = 0.0;
-        }
-    }
-}
-
-void Matrix::ones() {
-    for (int i = 0; i < this->getRows(); i++) {
-        for (int j = 0; j < this->getCols(); j++) {
-            this->m[i][j] = 1.0;
-        }
-    }
-}
-
-void Matrix::unit() {
-    if (this->nCols != this->nRows) {
-        cout << "Impossivel fazer matriz identidade , pois nao e quadrada" << endl;
-    }
-    else {
-        for (int i = 0; i <= this->getRows(); i++) {
-            for (int j = 0; j <= this->getCols(); j++) {
-                if (i == j) {
-                    this->m[i][j] = 1.0;
-                }
-                else {
-                    this->m[i][j] = 0.0;
-                }
-
-            }
-        }
-    }
-
-}
 
 vector<double> Matrix::getB() {
     vector<double> b(this->getRows());
@@ -329,16 +294,6 @@ vector<double> Matrix::decomposicaoLU(vector<double>& x) {
 }
 
 
-bool checkJacobi() {
-    /*
-    if () {
-        return false;
-    }
-    return true;
-    */
-    return true;
-}
-
 
 vector<double> Matrix::getG(vector<double>& b) {
     vector<double> g;
@@ -373,16 +328,13 @@ vector<double> Matrix::getX(vector<double>& x, vector<double> &g) {
 
 vector<double> Matrix::jacobi(vector<double>& b) {
     vector<double> g = this->getG(b);
-    vector<double> x;
+    vector<double> x(b.size(), 0.0);
     vector<double> x1;
-    x.push_back(0.0);
-    x.push_back(0.0);
-    x.push_back(0.0);
-    
+
     int stop = 50;
     int  c = 0;
     
-    while (c < 2) {
+    while (c < stop) {
         
         x1 = getX(x,g);
         vector<double>::iterator i;
@@ -399,6 +351,30 @@ vector<double> Matrix::jacobi(vector<double>& b) {
     return x;
 }
 
+vector<double> Matrix::gaussSeidel(vector<double>& b) {
+    vector<double> x;
+    for (int i = 0; i < this->getRows(); i++) {
+        x.push_back(b[i] / this->m[i][i]);
+    }
+
+    vector<double> g = this->getG(b);
+
+    int stop = 2;
+    int  c = 0;
+
+    while (c < stop) {
+        for (int i = 0; i < this->getRows(); i++) {
+            double result = 0.0;
+            for (int j = 0; j < this->getCols(); j++) {
+                result += this->m[i][j] * x[j];
+            }
+            result += g[i];
+            x[i] = result;
+        }
+        c++;
+    }
+    return x;
+}
 
 Matrix::~Matrix() {
     for (int i = 0; i <= nRows; i++) {

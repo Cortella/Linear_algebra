@@ -3,6 +3,10 @@
 
 /Linear_Algebra/.vs
 /Linear_Algebra/Linear_Algebra/x64
+/Linear_Algebra/x64
+
+# Visual Studio FIles
+*.vcxproj
 # Compiled Object files
 *.slo
 *.lo

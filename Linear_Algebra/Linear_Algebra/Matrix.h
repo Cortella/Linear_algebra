@@ -21,23 +21,9 @@ private:
     
 public:
 
-    //cria matriz de hilbert de  tamanho variavel
-    void hilbert(int size);
 
-    //Cria matriz de toepliz de tamanho variavel
-    void toepliz(int size);
-    
-
-    //cria matriz de cauch de tamanho variavel
-    void vandermond(int size);
-
-    //Cria matriz de cauchy com tamanho variavel 
-    void cauchy(int size);
-
-    //cria matriz de cauchy
     // Construtores
     Matrix();
-    // cria matriz B de jacobi
     Matrix(Matrix *x);
     Matrix(int rows, int cols, char mat = 'm');
     Matrix(const int& size);
@@ -71,15 +57,6 @@ public:
     //Decomposição LU
     vector<double> decomposicaoLU(vector<double>& x);
 
-    // faz com que a matriz torne-se uma matriz identidade
-    void unit();
-
-    //faz com o que matriz se torne nula
-    void zeros();
-
-    // faz com que a matriz torne-se uma matriz cujos elementos sao iguaia a 1
-    void ones();
-
     //cria a matriz aumentada
     void aumentada(vector<double> &v);
 
@@ -94,6 +71,9 @@ public:
 
     vector<double> getX(vector<double>& x,vector<double> &g);
     vector<double> jacobi(vector<double> &x);
+
+    //Aplica metodo de Gauss-Seidel
+    vector<double> gaussSeidel(vector<double>& b);
     //aplica metodo de eliminacao de gauss jordam
     vector<double> gaussJordan(vector<double>& x);
 

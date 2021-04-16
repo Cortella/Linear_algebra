@@ -24,27 +24,27 @@ int main()
     Matrix *m = new Matrix(3,3);
    
  
-    m->setElement(0, 0, 15.0);
-    m->setElement(0, 1, 5.0);
-    m->setElement(0, 2, -5.0);
+    m->setElement(0, 0, 10.0);
+    m->setElement(0, 1, 2.0);
+    m->setElement(0, 2, 1.0);
 
 
-    m->setElement(1, 0, 4.0);
-    m->setElement(1, 1, 10.0);
+    m->setElement(1, 0, 1.0);
+    m->setElement(1, 1, 5.0);
     m->setElement(1, 2, 1.0);
 
 
     m->setElement(2, 0, 2.0);
-    m->setElement(2, 1, -2.0);
-    m->setElement(2, 2, 8.0);
+    m->setElement(2, 1, 3.0);
+    m->setElement(2, 2, 10.0);
 
  
     
     
 
 
-    vector<double> b = {30.0, 23.0, -10.0};
-    vector<double> res = m->jacobi(b);
+    vector<double> b = {7.0, -8.0, 6.0};
+    vector<double> res = m->gaussSeidel(b);
     //printVector(res);
     //m->print();
 
