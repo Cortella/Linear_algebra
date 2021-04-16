@@ -20,7 +20,27 @@ void printVector(vector<double> m) {
 int main()
 {
     
+    //Matrizes de Hilbert
+    Matrix* hilbertP = new Matrix(5, 5, HILBERT);
+    Matrix* hilbertM = new Matrix(10, 10, HILBERT);
+    Matrix* hilbertG = new Matrix(15, 15, HILBERT);
+
+    //Matrizes de Vandermond
+    Matrix* vandemondP = new Matrix(5, 5, VANDERMOND);
+    Matrix* vandemondM = new Matrix(10, 10, VANDERMOND);
+    Matrix* vandemondG = new Matrix(15, 15, VANDERMOND);
+
+    //Matrizes de Cauchy
+    Matrix* cauchyP = new Matrix(5, 5, CAUCHY);
+    Matrix* cauchyM = new Matrix(10, 10, CAUCHY);
+    Matrix* cauchyG = new Matrix(15, 15, CAUCHY);
+
+    //Matrizes de Toeplitz
+    Matrix* toeplizP = new Matrix(5, 5, TOEPLITZ);
+    Matrix* toeplizM = new Matrix(10, 10, TOEPLITZ);
+    Matrix* toeplizG = new Matrix(15, 15, TOEPLITZ);
     
+    /*
     Matrix *m = new Matrix(3,3);
    
  
@@ -56,7 +76,7 @@ int main()
     
     // m->aumentada(x);
     // m->print();
-   
+   */
     system("pause");
 
 }

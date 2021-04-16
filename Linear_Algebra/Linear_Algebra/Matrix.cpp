@@ -1,11 +1,108 @@
 
 #include "Matrix.h"
 
+//Construtores
+Matrix::Matrix() {
+    int rows = 0, cols = 0;
+    double** aux = new double* [rows];
+    nRows = rows;
+    nCols = cols;
+    m = aux;
+}
+
+Matrix::Matrix(int rows, int cols, char mat) {
+    double** aux;
+    aux = new double* [cols];
+    vector<double> base;
+    double value;
+    for (int i = 0; i < rows; i++) {
+        base.push_back(1.0 + i);
+    }
+
+    for (int i = 0; i < rows; i++)
+    {
+        aux[i] = new double[cols];
+        switch (mat) {
+        case 'h':
+            for (int j = 0; j < cols; j++)
+            {
+                double result = 1.0 / (1.0 * i + j + 1.0);
+                aux[i][j] = result;
+            }
+            break;
+
+        case 'c':
+            for (int j = 0; j < cols; j++)
+            {
+                double result = 1.0 / (1.0 * i + j + 2.0);
+                aux[i][j] = result;
+            }
+            break;
+        case 'v':
+
+            for (int j = 0; j < cols; j++)
+            {
+                if (i == 0) {
+                    aux[i][j] = 1.0;
+                }
+                else if (i == 1) {
+                    aux[i][j] = base[j];
+                }
+                else {
+                    aux[i][j] = 0.0;
+                    aux[i][j] = pow(base[j], i);
+                }
+
+            }
+            break;
+        case 't':
+            for (int j = 0; j < cols; j++)
+            {
+                if (i == j) {
+                    aux[i][j] = 1.0;
+                }
+                else if (j < i) {
+                    aux[i][j] = base.back() + j + 1.0;
+                }
+                else {
+                    aux[i][j] = j + 1.0 - i;
+                }
+            }
+            break;
+        default:
+            for (int j = 0; j < cols; j++)
+            {
+                double result = 0.000;
+                aux[i][j] = result;
+            }
+            break;
+        }
 
 
+    }
+
+    nRows = rows;
+    nCols = cols;
+    m = aux;
+}
+
+Matrix::Matrix(const int& size) {
+    double** aux = new double* [size];
+    for (int i = 1; i <= size; i++)
+    {
+        aux[i] = new double[size];
+        for (int j = 0; j < size; j++) {
+            aux[i][j] = 0.0;
+        }
+
+    }
+    nRows = size;
+    nCols = size;
+    m = aux;
+}
 
 
-
+//Setters
 void Matrix::setSize(int rows, int cols) {
     double** aux;
     aux = new double* [rows];
@@ -27,125 +124,8 @@ void Matrix::setSize(int rows, int cols) {
     
 }
 
-void Matrix::hilbert(int size) {
 
-}
-Matrix::Matrix(int rows, int cols, char mat) {
-    double** aux;
-    aux = new double* [cols];
-    vector<double> base;
-    double value;
-    for (int i = 0; i < rows; i++) {
-       base.push_back(1.0 + i);
-    }
-
-        for (int i = 0; i < rows; i++)
-        {
-            aux[i] = new double[cols];
-            switch (mat) {
-                case 'h':
-                    for (int j = 0; j < cols; j++)
-                    {
-                        double result = 1.0 / (1.0*i + j + 1.0);
-                        aux[i][j] = result;
-                    }
-                    break;
-
-                case 'c' :
-                    for (int j = 0; j < cols; j++)
-                    {
-                        double result = 1.0 / (1.0*i + j + 2.0);
-                        aux[i][j] = result;
-                    }
-                    break;
-                case 'v':
-                    
-                    for (int j = 0; j < cols; j++)
-                    {
-                        if (i == 0) {
-                            aux[i][j] = 1.0;
-                        }
-                        else if (i == 1) {
-                            aux[i][j] = base[j];
-                        }
-                        else {
-                            aux[i][j] = 0.0;
-                            aux[i][j] = pow(base[j], i);
-                        }
-                        
-                    }
-                    break;
-                case 't':
-                    for (int j = 0; j < cols; j++)
-                    {
-                        if (i == j) {
-                            aux[i][j] = 1.0;
-                        }
-                        else if (j < i) {
-                            aux[i][j] = base.back() + j + 1.0;
-                        }
-                        else {
-                            aux[i][j] = j+ 1.0 -i;
-                        }
-                    }
-                    break;
-                default:
-                    for (int j = 0; j < cols; j++)
-                    {
-                        double result = 0.000;
-                        aux[i][j] = result;
-                    }
-                    break;
-            }
-            
-            
-        }
-       
-    nRows = rows;
-    nCols = cols;
-    m = aux;
-}
-Matrix::Matrix() {
-    int rows, cols;
-    cout << "Linhas :" << endl;
-    cin >> rows;
-    cout << "Colunas :" << endl;
-    cin >> cols;
-
-    double** aux = new double* [rows];
-    for (int i = 0; i < rows; i++)
-    {
-        aux[i] = new double[cols];
-        for (int j = 0; j < cols; j++)
-        {
-            cout << "Valor de m[" + i;
-            cout << "][" + j;
-            cout<< "]" << endl;
-            cin >> aux[i][j];
-        }
-    }
-    nRows = rows;
-    nCols = cols;
-    m = aux;
-}
-
-
-
-
-Matrix::Matrix(const int& size) {
-    double** aux = new double* [size];
-    for (int i = 1; i <= size; i++)
-    {
-        aux[i] = new double[size];
-        for (int j = 0; j < size; j++) {
-            aux[i][j] = 0;
-        }
-        
-    }
-    nRows = size;
-    nCols = size;
-    m = aux;
-}
+//Geters
 
 void Matrix::print() const {
     std::cout << std::fixed << std::setprecision(4);
@@ -234,7 +214,6 @@ vector<double> Matrix::gaussJordan(vector<double>& x) {
     vector<double> res(this->getRows());
     this->aumentada(x);
     int i, j, k, n =2; // declare variables and matrixes as
-    //to find the elements of diagonal matrix
     double element;
     for (j = 0; j <= n; j++) {
         for (i = 0; i <= n; i++) {
@@ -376,6 +355,7 @@ vector<double> Matrix::gaussSeidel(vector<double>& b) {
     return x;
 }
 
+//Destrutor
 Matrix::~Matrix() {
     for (int i = 0; i <= nRows; i++) {
         delete[] m[i];
