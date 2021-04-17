@@ -1,4 +1,3 @@
-
 #include "Matrix.h"
 
 //Construtores
@@ -128,13 +127,25 @@ void Matrix::setSize(int rows, int cols) {
 //Geters
 
 void Matrix::print() const {
-    std::cout << std::fixed << std::setprecision(4);
+    
     for (int i = 0; i < this->nRows; i++) {
         for (int j = 0; j < this->nCols; j++) {
             std::cout << m[i][j] << "|";
         }
         std::cout << endl;
     }
+}
+
+Matrix& Matrix::operator=(Matrix& m) {
+
+    this->setSize(m.getRows(), m.getCols());
+    for (int i = 0; i < m.getRows(); i++) {
+        for (int j = 0; j < m.getCols(); j++) {
+            this->m[i][j] = m.getElement(i, j);
+        }
+    }
+
+    return *this;
 }
 
 void Matrix::transpose() {
@@ -167,14 +178,16 @@ void Matrix::aumentada(vector<double>& v) {
     }
 }
 
-vector<double> Matrix::resolveGauss(vector<double>& b) {
+vector<double> Matrix::gauss(vector<double>& b) {
+    Matrix *aux = new Matrix();
+    *aux = *this;
     vector<double> x(b.size());
     int n = b.size();
+    auto begin = std::chrono::high_resolution_clock::now();
+    //eliminacao
     for (int k = 0; k < n - 1; k++) {
         for (int i = k + 1; i < n; i++) {
             double multiplicador = this->m[i][k] / this->m[k][k];
-            cout << "i = " << i << endl;
-            cout << "k = " << k << endl;
             for (int j = 0; j < this->getCols(); j++) {
                 this->m[i][j] = this->m[i][j] - multiplicador * this->m[k][j];
 
@@ -184,13 +197,7 @@ vector<double> Matrix::resolveGauss(vector<double>& b) {
 
     }
 
-        
-    vector<double>::iterator it;
-    for (it = b.begin(); it != b.end(); it++) {
-        std::cout << std::fixed << std::setprecision(4);
-        cout << "elemento: " << *it << endl;
-    }
-
+    //substituicoes sucessivas
     n = n - 1;
     x[n] = b[n] / this->m[n][n];
     for (int i = n - 1; i >= 0; i--) {
@@ -200,11 +207,10 @@ vector<double> Matrix::resolveGauss(vector<double>& b) {
         }
         x[i] = (b[i] - sum) / this->m[i][i];
     }
-    
-    this->print();
-
-
-    
+    auto end = std::chrono::high_resolution_clock::now() - begin;
+    long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
+    cout << "Tempo de execucao do metodo de Gauss matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;;
+    *this = *aux;
     return x;
 }
 
@@ -233,13 +239,6 @@ vector<double> Matrix::gaussJordan(vector<double>& x) {
     return res;
 }
 
-vector<int> Matrix::getP() {
-    vector<int> p(this->getRows());
-    for (int i = 0; i < p.size(); i++) {
-        p[i] = i + 1;
-    }
-    return p;
-}
 
 void Matrix::id() {
     for (int i = 0; i < this->getRows(); i++) {
@@ -247,16 +246,19 @@ void Matrix::id() {
     }
 }
 
-vector<double> Matrix::decomposicaoLU(vector<double>& x) {
-    vector<double> b(this->getRows());
-    vector<int> p = this->getP();
+vector<double> Matrix::decomposicaoLU(vector<double>& b) {
+    Matrix* aux = new Matrix();
+    *aux = *this;
+    vector<double> y(this->getRows(), 1.0);
+    vector<double> x(this->getRows(), 1.0);
+    
     Matrix* L = new Matrix(this->getRows(), this->getCols());
     L->id();
     Matrix* U = new Matrix(this->getRows(), this->getCols());
-    L->print();
 
     int n = b.size();
-    
+    auto begin = std::chrono::high_resolution_clock::now();
+    //get LU
     for (int k = 0; k < n - 1; k++) {
         double pivo = this->m[k][k];
         for (int i = k + 1; i < n; i++) {
@@ -269,6 +271,32 @@ vector<double> Matrix::decomposicaoLU(vector<double>& x) {
         }
 
     }
+   *U = *this;
+    //resolve Ly = b
+    for (int i = 0; i < L->getRows(); i++) {
+        double result =0.0;
+        for (int j = 0; j < L->getCols(); j++) {
+            if (i != j) {
+                result += L->m[i][j] * y[j];
+            } 
+        }
+        y[i] = b[i] - result;    
+    }
+
+    //resolve ux = y
+    n = n - 1;
+    x[n] = y[n] / U->getElement(n,n);
+    for (int i = n - 1; i >= 0; i--) {
+        double sum = 0.0;
+        for (int j = i + 1; j <= n; j++) {
+            sum += U->getElement(i,j) * x[j];
+        }
+        x[i] = (y[i] - sum) / U->getElement(i,i);
+    }
+    auto end = std::chrono::high_resolution_clock::now() - begin;
+    long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
+    cout << "Tempo de execucao decomposicao LU matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;;
+    *this = *aux;
     return b;
 }
 

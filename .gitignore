@@ -1,9 +1,9 @@
 # Prerequisites
 *.d
 
-/Linear_Algebra/.vs
-/Linear_Algebra/Linear_Algebra/x64
-/Linear_Algebra/x64
+/Linear_algebra/.vs
+/Linear_algebra/Linear_Algebra/x64
+/Linear_algebra/x64
 
 # Visual Studio FIles
 *.vcxproj

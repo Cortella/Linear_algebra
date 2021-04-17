@@ -1,6 +1,3 @@
-// Linear_Algebra.cpp : Este arquivo contém a função 'main'. A execução do programa começa e termina ali.
-//
-
 #include <iostream>
 #include "Matrix.h"
 #include <stdlib.h>
@@ -19,11 +16,22 @@ void printVector(vector<double> m) {
 
 int main()
 {
+    /*
     
+    //vetores B
+    vector<double> xP = { 1.0, 1.0, 1.0, 1.0, 1.0 };
+    vector<double> xM = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+    vector<double> xG = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+
     //Matrizes de Hilbert
     Matrix* hilbertP = new Matrix(5, 5, HILBERT);
     Matrix* hilbertM = new Matrix(10, 10, HILBERT);
     Matrix* hilbertG = new Matrix(15, 15, HILBERT);
+
+    //calula o vetor b inicial
+    vector<double> b;
+    b = hilbertP->getB();
+
 
     //Matrizes de Vandermond
     Matrix* vandemondP = new Matrix(5, 5, VANDERMOND);
@@ -40,58 +48,44 @@ int main()
     Matrix* toeplizM = new Matrix(10, 10, TOEPLITZ);
     Matrix* toeplizG = new Matrix(15, 15, TOEPLITZ);
     
-    /*
-    Matrix *m = new Matrix(3,3);
-   
- 
-    m->setElement(0, 0, 10.0);
-    m->setElement(0, 1, 2.0);
-    m->setElement(0, 2, 1.0);
+*/
+    vector<double> b = {0.0, 1.0, -2.0};
+    Matrix* m = new Matrix(3, 3);
 
+    m->setElement(0, 0, 1.0);
+    m->setElement(0, 1, 3.0);
+    m->setElement(0, 2, 5.0);
 
-    m->setElement(1, 0, 1.0);
-    m->setElement(1, 1, 5.0);
-    m->setElement(1, 2, 1.0);
+    m->setElement(1, 0, 2.0);
+    m->setElement(1, 1, 4.0);
+    m->setElement(1, 2, 7.0);
 
+    m->setElement(2, 0, 1.0);
+    m->setElement(2, 1, 1.0);
+    m->setElement(2, 2, 0.0);
 
-    m->setElement(2, 0, 2.0);
-    m->setElement(2, 1, 3.0);
-    m->setElement(2, 2, 10.0);
-
- 
-    
-    
-
-
-    vector<double> b = {7.0, -8.0, 6.0};
-    vector<double> res = m->gaussSeidel(b);
-    //printVector(res);
-    //m->print();
-
-    
    // m->print();
+   
     
+    cout << "TESTE LU" << endl;
     
-    
-    
+   // vector<double> res = hilbert->getB();
+   // vector<double> x = hilbert->gauss(res);
+
+   //Matrix* hilbert = new Matrix(10,10, HILBERT);
+    //vector<double> res = hilbert->getB();
+    vector<double> x = m->decomposicaoLU(b);
+    //printVector(x);
+   // m->print();
+
+   // m->print();
+ 
     // m->aumentada(x);
     // m->print();
-   */
+    
+
+
+
     system("pause");
 
 }
-
-    
-    
- 
-
-// Executar programa: Ctrl + F5 ou Menu Depurar > Iniciar Sem Depuração
-// Depurar programa: F5 ou menu Depurar > Iniciar Depuração
-
-// Dicas para Começar: 
-//   1. Use a janela do Gerenciador de Soluções para adicionar/gerenciar arquivos
-//   2. Use a janela do Team Explorer para conectar-se ao controle do código-fonte
-//   3. Use a janela de Saída para ver mensagens de saída do build e outras mensagens
-//   4. Use a janela Lista de Erros para exibir erros
-//   5. Ir Para o Projeto > Adicionar Novo Item para criar novos arquivos de código, ou Projeto > Adicionar Item Existente para adicionar arquivos de código existentes ao projeto
-//   6. No futuro, para abrir este projeto novamente, vá para Arquivo > Abrir > Projeto e selecione o arquivo. sln

@@ -3,6 +3,7 @@
 // matrix.h (header file)
 
 #include <iostream>
+#include <chrono>
 #include <iomanip>
 #include <vector>
 
@@ -10,6 +11,7 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::vector;
+using std::clock;
 
 class Matrix {
 private:
@@ -25,6 +27,8 @@ public:
     // Construtores
     //padrao
     Matrix();
+
+    
     //cria matrizes de Hilbert, Vandermond, Cauchy e Toeplitz de tamanho variável
     Matrix(int rows, int cols, char mat = 'm');
 
@@ -46,6 +50,8 @@ public:
     //altera o numero de linhas
     void setRows(int r) { this->nRows = r; }
 
+    //sobrecargas
+    Matrix& operator=(Matrix& m);
 
     //getters
     //retorna poteiro para matriz
@@ -64,10 +70,8 @@ public:
     vector<double> getB();
     vector<double> getG(vector<double>& b);
     vector<double> getX(vector<double>& x, vector<double>& g);
-    vector<int> getP();
-    //retorna elemento especifico
-    
 
+    //retorna elemento especifico
     void id();
     
     // transforma *this em sua transposta
@@ -76,28 +80,30 @@ public:
     //imprime matriz na tela
     void print() const;
 
-    //Decomposição LU
-    vector<double> decomposicaoLU(vector<double>& x);
-
     //cria a matriz aumentada
     void aumentada(vector<double> &v);
 
     //APlica o método de eliminação de gauss e retorna vetor b
-    vector<double> resolveGauss(vector<double> &x);
-
-    //Abertos
-    //jacobi
-
-   //Metodos
 
 
-    
-    vector<double> jacobi(vector<double> &x);
+    //Metodos
+    //Aplica método de gauss e retorna vetor de coeficientes
+    vector<double> gauss(vector<double>& b);
 
-    //Aplica metodo de Gauss-Seidel
-    vector<double> gaussSeidel(vector<double>& b);
-    //aplica metodo de eliminacao de gauss jordam
+    //aplica metodo de eliminacao de gauss jordam e retorna vetor de coeficientes
     vector<double> gaussJordan(vector<double>& x);
+
+    //Decomposição LU
+    vector<double> decomposicaoLU(vector<double>& b);
+
+
+    //Metodos iterativos
+    //Aplica metodo de Gauss-Seidel e retorna vetor de coeficientes
+    vector<double> gaussSeidel(vector<double>& b);
+
+    //Aplica metodo de jacobi
+    vector<double> jacobi(vector<double>& x);
+
 
     //destrutor
    ~Matrix();
