@@ -11,7 +11,7 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::vector;
-using std::clock;
+
 
 class Matrix {
 private:
@@ -28,12 +28,9 @@ public:
     //padrao
     Matrix();
 
-    
     //cria matrizes de Hilbert, Vandermond, Cauchy e Toeplitz de tamanho variável
     Matrix(int rows, int cols, char mat = 'm');
 
-    
-    
 
     //setters
     //Altera o tamanho da matriz e atribui 0.0 a novo espaço alocado

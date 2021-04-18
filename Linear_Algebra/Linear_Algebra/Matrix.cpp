@@ -164,7 +164,6 @@ void Matrix::aumentada(vector<double>& v) {
     }
 }
 
-
 vector<double> Matrix::gauss(vector<double>& b) {
     Matrix *aux = new Matrix();
     *aux = *this;
@@ -202,11 +201,13 @@ vector<double> Matrix::gauss(vector<double>& b) {
 }
 
 
-vector<double> Matrix::gaussJordan(vector<double>& x) {
-
+vector<double> Matrix::gaussJordan(vector<double>& b) {
+    Matrix* aux = new Matrix();
+    *aux = *this;
     vector<double> res(this->getRows());
-    this->aumentada(x);
-    int i, j, k, n =2; // declare variables and matrixes as
+    this->aumentada(b);
+    auto begin = std::chrono::high_resolution_clock::now();
+    int i, j, k, n =2; 
     double element;
     for (j = 0; j <= n; j++) {
         for (i = 0; i <= n; i++) {
@@ -218,11 +219,13 @@ vector<double> Matrix::gaussJordan(vector<double>& x) {
             }
         }
     }
-    cout << "\nThe solution is:\n";
     for (i = 0; i <= n; i++) {
         res[i] = this->m[i][n + 1] / this->m[i][i];
-        cout << "x" << i << "=" << res[i] << " ";
     }
+    auto end = std::chrono::high_resolution_clock::now() - begin;
+    long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
+    cout << "Tempo de execucao do metodo de Gauss-Jordan matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;;
+    *this = *aux;
     return res;
 }
 
@@ -231,7 +234,6 @@ void Matrix::id() {
         this->m[i][i] = 1.0;
     }
 }
-
 
 vector<double> Matrix::decomposicaoLU(vector<double>& b) {
     Matrix* aux = new Matrix();
@@ -316,8 +318,9 @@ vector<double> Matrix::getX(vector<double>& x, vector<double> &g) {
     return x1;
 }
 
-
 vector<double> Matrix::jacobi(vector<double>& b) {
+    Matrix* aux = new Matrix();
+    *aux = *this;
     vector<double> g = this->getG(b);
     vector<double> x(b.size(), 0.0);
     vector<double> x1;
@@ -333,11 +336,13 @@ vector<double> Matrix::jacobi(vector<double>& b) {
     auto end = std::chrono::high_resolution_clock::now() - begin;
     long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
     cout << "Tempo de execucao jacobi matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;
+    *this = *aux;
     return x;
 }
 
-
 vector<double> Matrix::gaussSeidel(vector<double>& b) {
+    Matrix* aux = new Matrix();
+    *aux = *this;
     vector<double> x;
     for (int i = 0; i < this->getRows(); i++) {
         x.push_back(b[i] / this->m[i][i]);
@@ -363,6 +368,7 @@ vector<double> Matrix::gaussSeidel(vector<double>& b) {
     auto end = std::chrono::high_resolution_clock::now() - begin;
     long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
     cout << "Tempo de execucao Gauss-Seidel matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;
+    *this = *aux;
     return x;
 }
 
