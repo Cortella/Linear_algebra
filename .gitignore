@@ -1,12 +1,13 @@
 # Prerequisites
 *.d
 
-/Linear_algebra/.vs
-/Linear_algebra/Linear_Algebra/x64
-/Linear_algebra/x64
+/Linear_Algebra/.vs
+/Linear_Algebra/Linear_Algebra/x64
+/Linear_Algebra/x64
+/Linear_Algebra/Linear_Algebra.sln
 
 # Visual Studio FIles
-*.vcxproj
+/Linear_algebra/*.vcxproj
 # Compiled Object files
 *.slo
 *.lo

@@ -32,8 +32,6 @@ public:
     //cria matrizes de Hilbert, Vandermond, Cauchy e Toeplitz de tamanho variável
     Matrix(int rows, int cols, char mat = 'm');
 
-    //cria matriz quadrada de zeros
-    Matrix(const int& size);
     
     
 
@@ -51,6 +49,7 @@ public:
     void setRows(int r) { this->nRows = r; }
 
     //sobrecargas
+    //sobrecarrega operador = e permite copia de valores de uma matriz em uma unica passagem
     Matrix& operator=(Matrix& m);
 
     //getters
@@ -83,25 +82,23 @@ public:
     //cria a matriz aumentada
     void aumentada(vector<double> &v);
 
-    //APlica o método de eliminação de gauss e retorna vetor b
-
 
     //Metodos
-    //Aplica método de gauss e retorna vetor de coeficientes
+    //implementa metodo de gauss e retorna vetor solucao X
     vector<double> gauss(vector<double>& b);
 
-    //aplica metodo de eliminacao de gauss jordam e retorna vetor de coeficientes
+    //implementa metodo de gauss jordan e retorna vetor solucao X
     vector<double> gaussJordan(vector<double>& x);
 
-    //Decomposição LU
+    //implementa decomposicao LU e retorna vetor solucao X
     vector<double> decomposicaoLU(vector<double>& b);
 
 
     //Metodos iterativos
-    //Aplica metodo de Gauss-Seidel e retorna vetor de coeficientes
+    //implementa metodo de jacobi e retorna vetor solucao X
     vector<double> gaussSeidel(vector<double>& b);
 
-    //Aplica metodo de jacobi
+    //implementa metodo de Gauss-Seidel e retorna vetor solucao X
     vector<double> jacobi(vector<double>& x);
 
 
