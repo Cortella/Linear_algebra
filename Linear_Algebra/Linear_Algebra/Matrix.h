@@ -6,8 +6,6 @@
 #include <chrono>
 #include <iomanip>
 #include <vector>
-#include <map>
-#include <string>
 
 #define IDENTIDADE 'i'
 
@@ -15,8 +13,6 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::vector;
-using std::map;
-using std::string;
 
 
 
@@ -28,6 +24,19 @@ private:
     int nCols;  //  numero de colunas
 
     
+    //participa do metodo de gauss seidel
+    vector<double> getG(vector<double> b);
+
+    //particicipa do metodo de gauss jacobi
+    vector<double> getX(vector<double> x, vector<double> pivo);
+
+    //cria a matriz aumentada
+    void aumentada(vector<double> v);
+
+    vector<double>successiveSubstitutions(vector<double> b);
+
+    vector<double>retroactiveSubstitutions(vector<double> b);
+
 public:
 
 
@@ -35,9 +44,11 @@ public:
     //padrao
     Matrix();
 
-    //cria matrizes de Hilbert, Vandermond, Cauchy e Toeplitz de tamanho variável
+    //cria matrizes de Hilbert, Vandermond, identidade, Cauchy e Toeplitz de tamanho variável
     Matrix(int rows, int cols, char mat = 'm');
 
+    //calcula a norma
+    double getNorma(vector<double>v, vector<double>x);
 
     //setters
     //Altera o tamanho da matriz e atribui 0.0 a novo espaço alocado
@@ -69,46 +80,31 @@ public:
     //retorna um elemento especifico
     double getElement(int row, int col) const { return this->m[row][col]; }
 
-
+    //obtem vetor b a partir da soma da linha da matriz
     vector<double> getB();
-    vector<double> getG(vector<double>& b);
-    vector<double> getX(vector<double>& x, vector<double>& pivo);
 
-    // transforma *this em sua transposta
-    void transpose();
-
+    
     //imprime matriz na tela
     void print() const;
 
-    //cria a matriz aumentada
-    void aumentada(vector<double> &v);
-
-
     //Metodos
     //implementa metodo de gauss e retorna vetor solucao X
-    vector<double> gauss(vector<double>& b);
+    vector<double> gauss(vector<double> b);
 
     //implementa metodo de gauss jordan e retorna vetor solucao X
-    vector<double> gaussJordan(vector<double>& x);
+    vector<double> gaussJordan(vector<double> x);
+
+    //metodo de decomposicao LU
+    vector<double>lu(vector<double> b);
 
     //Metodos iterativos
     //implementa metodo de jacobi e retorna vetor solucao X
-    vector<double> gaussSeidel(vector<double>& b);
-
+    vector<double> gaussSeidel(vector<double> b);
 
     //prepara matr4iz para metodo de jacobi
-    vector<double> prepare(vector<double>& b);
+    vector<double> prepare(vector<double> b);
     //implementa metodo de Gauss-Seidel e retorna vetor solucao X
-    vector<double> jacobi(vector<double>& x);
-
-
-    //teste LU Organizada
-    vector<double>successiveSubstitutions(vector<double>& b);
-
-    vector<double>retroactiveSubstitutions(vector<double>& b);
-
-    vector<double>lu(vector<double>& b);
-
+    vector<double> jacobi(vector<double> x);
 
     //destrutor
    ~Matrix();

@@ -7,6 +7,7 @@ Matrix::Matrix() {
     nRows = rows;
     nCols = cols;
     m = aux;
+
 }
 
 Matrix::Matrix(int rows, int cols, char mat) {
@@ -145,15 +146,6 @@ Matrix& Matrix::operator=(Matrix& m) {
     return *this;
 }
 
-void Matrix::transpose() {
-    Matrix matriz(*this);
-    for (int i = 0; i < this->getRows(); i++) {
-        for (int j = 0; j < this->getCols(); j++) {
-            matriz.setElement(j, i, this->m[i][j]);
-        }
-    }
-    *this = matriz;
-}
 
 
 vector<double> Matrix::getB() {
@@ -168,14 +160,14 @@ vector<double> Matrix::getB() {
     return b;
 }
 
-void Matrix::aumentada(vector<double>& v) {
+void Matrix::aumentada(vector<double> v) {
     this->setSize(this->getRows(), this->getCols() + 1 );
     for (int i = 0; i < getRows(); i++) {
         this->setElement(i, (getCols() - 1), v[i]);
     }
 }
 
-vector<double> Matrix::gauss(vector<double>& b) {
+vector<double> Matrix::gauss(vector<double> b) {
     Matrix* aux = new Matrix();
     *aux = *this;
     vector<double> x(b.size());
@@ -212,7 +204,7 @@ vector<double> Matrix::gauss(vector<double>& b) {
 }
 
 
-vector<double> Matrix::gaussJordan(vector<double>& b) {
+vector<double> Matrix::gaussJordan(vector<double> b) {
     Matrix* aux = new Matrix();
     *aux = *this;
     vector<double> res(this->getRows());
@@ -240,24 +232,7 @@ vector<double> Matrix::gaussJordan(vector<double>& b) {
     return res;
 }
 
-vector<double> Matrix::getG(vector<double>& b) {
-    vector<double> g;
-    for (int i = 0; i < this->getRows(); i++) {
-        double pivo = this->m[i][i];
-        for (int j = 0; j < this->getCols(); j++) {
-            if (i == j) {
-                this->m[i][j] = 0.0;
-            }
-            else {
-                this->m[i][j] = -1.0 * this->m[i][j] / pivo;
-            }
-        }
-        g.push_back((b[i] / pivo));
-    }
-    return g;
-}
-
-vector<double> Matrix::getX(vector<double>& x, vector<double> &pivo) {
+vector<double> Matrix::getX(vector<double> x, vector<double> pivo) {
     vector<double> x1;
     for (int i = 0; i < this->getRows(); i++) {
         double result = 0.0;
@@ -274,10 +249,31 @@ vector<double> Matrix::getX(vector<double>& x, vector<double> &pivo) {
     return x1;
 }
     
-    
+double Matrix::getNorma(vector<double> v, vector<double> x) {
+    int n = v.size();
+    double maxNum = 0.0;
+    double maxDen = 0.0;
+    double num;
+    for (int i = 0; i < n; i++) {
+        num = abs(v[i] - x[i]);
+        if (num > maxNum) {
+            maxNum = num;
+        }
+        double den = abs(v[i]);
+        if (den == 0) {
+            continue;
+        }
+        else {
+            if (den > maxDen) {
+                maxDen = den;
+            }
+        }
+    }
+    return maxNum / maxDen;
+}
 
 
-vector<double> Matrix::prepare(vector<double>& b) {
+vector<double> Matrix::prepare(vector<double> b) {
     vector<double> pivo;
     for (int i = 0; i < this->getRows(); i++) {
         for (int j = 0; j < this->getCols(); j++) {
@@ -294,28 +290,47 @@ vector<double> Matrix::prepare(vector<double>& b) {
 }
 
 
-vector<double> Matrix::jacobi(vector<double>& b) {
+vector<double> Matrix::jacobi(vector<double> b) {
     Matrix* aux = new Matrix();
     *aux = *this;
     vector<double> x(b.size(), 0.0);
     vector<double> x1;
+    auto begin = std::chrono::high_resolution_clock::now();
     vector<double> pivo = prepare(b);
-    this->print();
-    int stop = 3;
+    int stop = 10;
     int c = 0;
     while (c < stop) {
-        x1 = this->getX(x,pivo);
+        x1 = this->getX(x, pivo);
         x = x1;
         c++;
     }
-
+    auto end = std::chrono::high_resolution_clock::now() - begin;
+    long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
+    cout << "Tempo de execucao Gauss-Seidel matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;
     *this = *aux;
+    return x;
 
-    return pivo;
-   
 }
 
-vector<double> Matrix::gaussSeidel(vector<double>& b) {
+vector<double> Matrix::getG(vector<double> b) {
+    vector<double> g;
+    for (int i = 0; i < this->getRows(); i++) {
+        double pivo = this->m[i][i];
+        for (int j = 0; j < this->getCols(); j++) {
+            if (i == j) {
+                this->m[i][j] = 0.0;
+            }
+            else {
+                this->m[i][j] = -1.0 * this->m[i][j] / pivo;
+            }
+        }
+        g.push_back((b[i] / pivo));
+    }
+    return g;
+}
+
+
+vector<double> Matrix::gaussSeidel(vector<double> b) {
     Matrix* aux = new Matrix();
     *aux = *this;
     vector<double> x;
@@ -326,10 +341,11 @@ vector<double> Matrix::gaussSeidel(vector<double>& b) {
     auto begin = std::chrono::high_resolution_clock::now();
     vector<double> g = this->getG(b);
 
-    int stop = 2;
+    int stop = 10;
     int  c = 0;
     while (c < stop) {
         for (int i = 0; i < this->getRows(); i++) {
+            
             double result = 0.0;
             for (int j = 0; j < this->getCols(); j++) {
                 result += this->m[i][j] * x[j];
@@ -337,7 +353,6 @@ vector<double> Matrix::gaussSeidel(vector<double>& b) {
             result += g[i];
             x[i] = result;
         }
-
         c++;
     }
     auto end = std::chrono::high_resolution_clock::now() - begin;
@@ -348,7 +363,7 @@ vector<double> Matrix::gaussSeidel(vector<double>& b) {
 }
 
 
-vector<double> Matrix::lu(vector<double>& b) {
+vector<double> Matrix::lu(vector<double> b) {
         Matrix* aux = new Matrix();
         *aux = *this;
         int n = this->getRows();
@@ -379,11 +394,12 @@ vector<double> Matrix::lu(vector<double>& b) {
         auto end = std::chrono::high_resolution_clock::now() - begin;
         long long miliSeconds = std::chrono::duration_cast<std::chrono::microseconds>(end).count();
         cout << "Tempo de execucao decomposicao LU matriz " << this->getRows() << " X " << this->getCols() << " " << miliSeconds << "ms" << endl;
+        *this = *aux;
         return x;
 
 }
 
-vector<double> Matrix::successiveSubstitutions(vector<double>& b) {
+vector<double> Matrix::successiveSubstitutions(vector<double> b) {
     Matrix* aux = new Matrix();
     *aux = *this;
     int n = this->getRows();
@@ -403,7 +419,7 @@ vector<double> Matrix::successiveSubstitutions(vector<double>& b) {
     
 }
 
-vector<double> Matrix::retroactiveSubstitutions(vector<double>& b) {
+vector<double> Matrix::retroactiveSubstitutions(vector<double> b) {
     Matrix* aux = new Matrix();
     *aux = *this;
     int n = this->getRows();
@@ -420,6 +436,7 @@ vector<double> Matrix::retroactiveSubstitutions(vector<double>& b) {
     *this = *aux;
     return x;
 }
+
 
 //Destrutor
 Matrix::~Matrix() {
