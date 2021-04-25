@@ -1,11 +1,13 @@
-#include <iostream>
 #include "Matrix.h"
 #include <stdlib.h>
+
 
 #define HILBERT 'h'
 #define VANDERMOND 'v'
 #define CAUCHY 'c'
 #define TOEPLITZ 't'
+
+using std::iterator;
 
 void printVector(vector<double> m) {
     vector<double>::iterator i;
@@ -15,15 +17,32 @@ void printVector(vector<double> m) {
     }
 }
 
+double EQM(vector<double> ones, vector<double> obtidos) {
+    double eqm = 0.0;
+    for (int i = 0; i < obtidos.size(); i++) {
+        eqm += fabs(pow(ones[i], 2) + pow(ones[i], 2));
+    }
+    return eqm;
+}
+
+void printMap(map<string, double> m) {
+
+    map<string, double>::iterator itr;
+    for (itr = m.begin(); itr != m.end(); ++itr) {
+        cout << '\t' << itr->first
+            << '\t' << itr->second << '\n';
+    }
+}
+
 int main()
 {
-    
+    map<string, double> map;
     
     //vetores B
     vector<double> xP = { 1.0, 1.0, 1.0, 1.0, 1.0 };
     vector<double> xM = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
     vector<double> xG = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-
+    
     //Matrizes de Hilbert
     cout << "MATRIZES DE HILBERT" << endl;
     cout << "--------------------------------------------------" << endl;
@@ -33,43 +52,66 @@ int main()
     Matrix* hilbertG = new Matrix(15, 15, HILBERT);
 
     //gets b's hilbert
-    vector<double> bHilbertP= hilbertP->getB();
+    vector<double> bHilbertP = hilbertP->getB();
+
     vector<double> bHilbertM = hilbertM->getB();
+
     vector<double> bHilbertG = hilbertG->getB();
 
-    //metodos de resolucao de sistemas lineares para hilbert P
-    vector<double> hilbertGaussP = hilbertP->gauss(bHilbertP);
-    printVector(hilbertGaussP);
+    cout << "NOVA LU " << endl;
+    vector<double> teste = hilbertP->lu(bHilbertP);
+    printVector(teste);
+    /*
     vector<double> hilbertGaussJordanP = hilbertP->gaussJordan(bHilbertP);
     printVector(hilbertGaussJordanP);
-    vector<double> hilbertLuP = hilbertP->decomposicaoLU(bHilbertP);
-    printVector(hilbertLuP);
-    vector<double> hilbertJacobiP = hilbertP->jacobi(bHilbertP);
-    printVector(hilbertJacobiP);
-    vector<double> hilbertGaussSeidelP = hilbertP->gaussSeidel(bHilbertP);
-    printVector(hilbertGaussSeidelP);
-
-    vector<double> hilbertGaussM = hilbertM->gauss(bHilbertM);
-    printVector(hilbertGaussM);
+    map["HILBERT->P - GAUSS-JORDAN"] = EQM(xG, hilbertGaussJordanP);
     vector<double> hilbertGaussJordanM = hilbertM->gaussJordan(bHilbertM);
     printVector(hilbertGaussJordanM);
-    vector<double> hilbertLuM = hilbertM->decomposicaoLU(bHilbertM);
-    printVector(hilbertLuM);
-    vector<double> hilbertJacobiM = hilbertM->jacobi(bHilbertM);
-    printVector(hilbertJacobiM);
-    vector<double> hilbertGaussSeidelM = hilbertM->gaussSeidel(bHilbertM);
-    printVector(hilbertGaussSeidelM);
-
-    vector<double> hilbertGaussG = hilbertG->gauss(bHilbertG);
-    printVector(hilbertGaussG);
+    map["HIBERT->M - GAUSS-JORDAN"] = EQM(xG, hilbertGaussJordanM);
     vector<double> hilbertGaussJordanG = hilbertG->gaussJordan(bHilbertG);
     printVector(hilbertGaussJordanG);
+    map["HIBERT->G - GAUSS-JORDAN"] = EQM(xG, hilbertGaussJordanG);
+    vector<double> hilbertLuP = hilbertP->decomposicaoLU(bHilbertP);
+    printVector(hilbertLuP);
+    vector<double> hilbertLuM = hilbertM->decomposicaoLU(bHilbertM);
+    printVector(hilbertLuM);
     vector<double> hilbertLuG = hilbertG->decomposicaoLU(bHilbertG);
     printVector(hilbertLuG);
+    */
+    //metodos de resolucao de sistemas lineares
+    /*
+    vector<double> hilbertGaussP = hilbertP->gauss(bHilbertP);
+    map["HILBERT->P - GAUSS"] = EQM(xG, hilbertGaussP);
+    vector<double> hilbertGaussJordanP = hilbertP->gaussJordan(bHilbertP);
+    map["HILBERT->P - GAUSS-JORDAN"] = EQM(xG, hilbertGaussJordanP);
+    vector<double> hilbertLuP = hilbertP->gaussJordan(bHilbertP);
+    map["HILBERT->P - Lu"] = EQM(xG, hilbertLuP);
+    vector<double> hilbertJacobiP = hilbertP->decomposicaoLU(bHilbertP);
+    map["HILBERT->P - JACOBI"] = EQM(xG, hilbertJacobiP);
+    vector<double> hilbertGaussSeidelP = hilbertP->gaussSeidel(bHilbertP);
+    map["HILBERT->P - SEIDEL"] = EQM(xG, hilbertGaussSeidelP);
+
+    vector<double> hilbertGaussM = hilbertM->gauss(bHilbertM);
+    map["HILBERT->M - GAUSS"] = EQM(xG, hilbertGaussM);
+    vector<double> hilbertGaussJordanM = hilbertM->gaussJordan(bHilbertM);
+    map["HIBERT->M - GAUSS-JORDAN"] = EQM(xG, hilbertGaussJordanM);
+    vector<double> hilbertLuM = hilbertM->decomposicaoLU(bHilbertM);
+    map["HILBERT->M - LU"] = EQM(xG, hilbertLuM);
+    vector<double> hilbertJacobiM = hilbertM->jacobi(bHilbertM);
+    map["HILBERT->M - JACOBI"] = EQM(xG, hilbertJacobiM);
+    vector<double> hilbertGaussSeidelM = hilbertM->gaussSeidel(bHilbertM);
+    map["HILBERT->M - SEIDEL"] = EQM(xG, hilbertGaussSeidelM);
+
+    vector<double> hilbertGaussG = hilbertG->gauss(bHilbertG);
+    map["HILBERT->G - GAUSS"] = EQM(xG, hilbertGaussG);
+    vector<double> hilbertGaussJordanG = hilbertG->gaussJordan(bHilbertG);
+    map["HIBERT->G - GAUSS-JORDAN"] = EQM(xG, hilbertGaussJordanG);
+    vector<double> hilbertLuG = hilbertG->decomposicaoLU(bHilbertG);
+    map["HILBERT->G - LU"] = EQM(xG, hilbertLuG);
     vector<double> hilbertJacobiG = hilbertG->jacobi(bHilbertG);
-    printVector(hilbertJacobiG);
+    map["HILBERT->G - JACOBI"] = EQM(xG, hilbertJacobiG);
     vector<double> hilbertGaussSeidelG = hilbertG->gaussSeidel(bHilbertG);
-    printVector(hilbertGaussSeidelG);
+    map["HILBERT->G - SEIDEL"] = EQM(xG, hilbertGaussSeidelG);
     
 
     //Matrizes de Vandermond
@@ -88,37 +130,37 @@ int main()
 
     //metodos de resolucao de sistemas lineares para vandermond
     vector<double> vandermondGaussP = vandermondP->gauss(bVandermondP);
-    printVector(vandermondGaussP);
+    map["VANDERMOND->P - GAUSS"] = EQM(xG, vandermondGaussP);
     vector<double> vandermondGaussJordanP = vandermondP->gaussJordan(bVandermondP);
-    printVector(vandermondGaussJordanP);
+    map["VANDERMOND->P - GAUSS-JORDAN"] = EQM(xG, vandermondGaussJordanP);
     vector<double> vandermondLuP = vandermondP->decomposicaoLU(bVandermondP);
-    printVector(vandermondLuP);
+    map["VANDERMOND->P - LU"] = EQM(xG, vandermondLuP);
     vector<double> vandermondJacobiP = vandermondP->jacobi(bVandermondP);
-    printVector(vandermondJacobiP);
+    map["VANDERMOND->P - JACOBI"] = EQM(xG, vandermondJacobiP);
     vector<double> vandermondGaussSeidelP = vandermondP->gaussSeidel(bVandermondP);
-    printVector(vandermondGaussSeidelP);
+    map["VANDERMOND->P - SEIDEL"] = EQM(xG, vandermondGaussSeidelP);
 
     vector<double> vandermondGaussM = vandermondM->gauss(bVandermondM);
-    printVector(vandermondGaussM);
+    map["VANDERMOND->M - GAUSS"] = EQM(xG, vandermondGaussM);
     vector<double> vandermondGaussJordanM = vandermondM->gaussJordan(bVandermondM);
-    printVector(vandermondGaussJordanM);
+    map["VANDERMOND->M - GAUSS-JORDAN"] = EQM(xG, vandermondGaussJordanM);
     vector<double> vandermondLuM = vandermondM->decomposicaoLU(bVandermondM);
-    printVector(vandermondLuM);
+    map["VANDERMOND->M - LU"] = EQM(xG, vandermondLuM);
     vector<double> vandermondJacobiM = vandermondM->jacobi(bVandermondM);
-    printVector(vandermondJacobiM);
+    map["VANDERMOND->M - JACOBI"] = EQM(xG, vandermondJacobiM);
     vector<double> vandermondGaussSeidelM = vandermondM->gaussSeidel(bVandermondM);
-    printVector(vandermondGaussSeidelM);
+    map["VANDERMOND->M - SEIDEL"] = EQM(xG, vandermondGaussSeidelM);
 
     vector<double> vandermondGaussG = vandermondG->gauss(bVandermondG);
-    printVector(vandermondGaussG);
+    map["VANDERMOND->G - GAUSS"] = EQM(xG, vandermondGaussG);
     vector<double> vandermondGaussJordanG = vandermondG->gaussJordan(bVandermondG);
-    printVector(vandermondGaussJordanG);
+    map["VANDERMOND->G - GAUSS-JORDAN"] = EQM(xG, vandermondGaussJordanG);
     vector<double> vandermondLuG = vandermondG->decomposicaoLU(bVandermondG);
-    printVector(vandermondLuG);
+    map["VANDERMOND->G - LU"] = EQM(xG, vandermondLuG);
     vector<double> vandermondJacobiG = vandermondG->jacobi(bVandermondG);
-    printVector(vandermondJacobiG);
+    map["VANDERMOND->G - JACOBI"] = EQM(xG, vandermondJacobiG);
     vector<double> vandermondGaussSeidelG = vandermondG->gaussSeidel(bVandermondG);
-    printVector(vandermondGaussSeidelG);
+    map["VANDERMOND->G - SEIDEL"] = EQM(xG, vandermondGaussSeidelG);
 
 
     cout << "MATRIZES DE CAUCHY" << endl;
@@ -135,37 +177,37 @@ int main()
     vector<double> bCauchyG = cauchyG->getB();
 
     vector<double> cauchyGaussP = cauchyP->gauss(bCauchyP);
-    printVector(cauchyGaussP);
+    map["CAUCHY->P - GAUSS-JORDAN"] = EQM(xG, cauchyGaussP);
     vector<double> cauchyGaussJordanP = cauchyP->gaussJordan(bCauchyP);
-    printVector(cauchyGaussJordanP);
+    map["CAUCHY->P - GAUSS-JORDAN"] = EQM(xG, cauchyGaussJordanP);
     vector<double> cauchyLuP = cauchyP->decomposicaoLU(bCauchyP);
-    printVector(cauchyLuP);
+    map["CAUCHY->P - LU"] = EQM(xG, cauchyLuP);
     vector<double> cauchyJacobiP = cauchyP->jacobi(bCauchyP);
-    printVector(cauchyJacobiP);
+    map["CAUCHY->P - JACOBI"] = EQM(xG, cauchyJacobiP);
     vector<double> cauchyGaussSeidelP = cauchyP->gaussSeidel(bCauchyP);
-    printVector(cauchyGaussSeidelP);
+    map["CAUCHY->P - SEIDEL"] = EQM(xG, cauchyGaussSeidelP);
 
     vector<double> cauchyGaussM = cauchyM->gauss(bCauchyM);
-    printVector(cauchyGaussM);
+    map["CAUCHY->M - GAUSS"] = EQM(xG, cauchyGaussM);
     vector<double> cauchyGaussJordanM = cauchyM->gaussJordan(bCauchyM);
-    printVector(cauchyGaussJordanM);
+    map["CAUCHY->M - GAUSS-JORDAN"] = EQM(xG, cauchyGaussJordanM);
     vector<double> cauchyLuM = cauchyM->decomposicaoLU(bCauchyM);
-    printVector(cauchyLuM);
+    map["CAUCHY->M - LU"] = EQM(xG, cauchyLuM);
     vector<double> cauchyJacobiM = cauchyM->jacobi(bCauchyM);
-    printVector(cauchyJacobiM);
+    map["CAUCHY->M - JACOBI"] = EQM(xG, cauchyJacobiM);
     vector<double> cauchyGaussSeidelM = cauchyM->gaussSeidel(bCauchyM);
-    printVector(cauchyGaussSeidelM);
+    map["CAUCHY->M - SEIDEL"] = EQM(xG, cauchyGaussSeidelM);
 
     vector<double> cauchyGaussG = cauchyG->gauss(bCauchyG);
-    printVector(cauchyGaussG);
+    map["CAUCHY->G - GAUSS"] = EQM(xG, cauchyGaussG);
     vector<double> cauchyGaussJordanG = cauchyG->gaussJordan(bCauchyG);
-    printVector(cauchyGaussJordanG);
+    map["CAUCHY->G - GAUSS-JORDAN"] = EQM(xG, cauchyGaussJordanG);
     vector<double> cauchyLuG = cauchyG->decomposicaoLU(bCauchyG);
-    printVector(cauchyLuG);
+    map["CAUCHY->G - LU"] = EQM(xG, cauchyLuG);
     vector<double> cauchyJacobiG = cauchyG->jacobi(bCauchyG);
-    printVector(cauchyJacobiG);
+    map["CAUCHY->G - JACOBI"] = EQM(xG, cauchyJacobiG);
     vector<double> cauchyGaussSeidelG = cauchyG->gaussSeidel(bCauchyG);
-    printVector(cauchyGaussSeidelG);
+    map["CAUCHY->G - SEIDEL"] = EQM(xG, cauchyGaussSeidelG);
 
 
     cout << "MATRIZES DE TOEPLITZ" << endl;
@@ -183,39 +225,41 @@ int main()
 
     //metodos de resolucao de sistemas lineares para vandermond
     vector<double> toeplitzGaussP = toeplitzP->gauss(bToeplitzP);
-    printVector(toeplitzGaussP);
+    map["TOEPLIZ->P - GAUSS"] = EQM(xG, toeplitzGaussP);
     vector<double> toeplitzGaussJordanP = toeplitzP->gaussJordan(bToeplitzP);
-    printVector(toeplitzGaussJordanP);
+    map["TOEPLIZ->P - GAUSS-JORDAN"] = EQM(xG, toeplitzGaussJordanP);
     vector<double> toeplitzLuP = toeplitzP->decomposicaoLU(bToeplitzP);
-    printVector(toeplitzLuP);
+    map["TOEPLIZ->P - LU"] = EQM(xG, toeplitzLuP);
     vector<double> toeplitzJacobiP = toeplitzP->jacobi(bToeplitzP);
-    printVector(toeplitzJacobiP);
+    map["TOEPLIZ->P - JACOBI"] = EQM(xG, toeplitzJacobiP);
     vector<double> toeplitzGaussSeidelP = toeplitzP->gaussSeidel(bToeplitzP);
-    printVector(toeplitzGaussSeidelP);
+    map["TOEPLIZ->P - SEIDEL"] = EQM(xG, toeplitzGaussSeidelP);
 
     vector<double> toeplitzGaussM = toeplitzM->gauss(bToeplitzM);
-    printVector(toeplitzGaussM);
+    map["TOEPLIZ->m - GAUSS"] = EQM(xG, toeplitzGaussM);
     vector<double> toeplitzGaussJordanM = toeplitzM->gaussJordan(bToeplitzM);
-    printVector(toeplitzGaussJordanM);
+    map["TOEPLIZ->M - GAUSS-JORDAN"] = EQM(xG, toeplitzGaussJordanM);
     vector<double> toeplitzLuM = toeplitzM->decomposicaoLU(bToeplitzM);
-    printVector(toeplitzLuM);
+    map["TOEPLIZ->M - LU"] = EQM(xG, toeplitzLuM);
     vector<double> toeplitzJacobiM = toeplitzM->jacobi(bToeplitzM);
-    printVector(toeplitzJacobiM);
+    map["TOEPLIZ->M - JACOBI"] = EQM(xG, toeplitzJacobiM);
     vector<double> toeplitzGaussSeidelM = toeplitzM->gaussSeidel(bToeplitzM);
-    printVector(toeplitzGaussSeidelM);
+    map["TOEPLIZ->M - SEIDEL"] = EQM(xG, toeplitzGaussSeidelM);
 
     vector<double> toeplitzGaussG = toeplitzG->gauss(bToeplitzG);
-    printVector(toeplitzGaussG);
+    map["TOEPLIZ->G - GAUSS"] = EQM(xG, toeplitzGaussG);
     vector<double> toeplitzGaussJordanG = toeplitzG->gaussJordan(bToeplitzG);
-    printVector(toeplitzGaussJordanG);
+    map["TOEPLIZ->G - GAUSS-JORDAN"] = EQM(xG, toeplitzGaussJordanG);
     vector<double> toeplitzLuG = toeplitzG->decomposicaoLU(bToeplitzG);
-    printVector(toeplitzLuG);
+    map["TOEPLIZ->G - LU"] = EQM(xG, toeplitzLuG);
     vector<double> toeplitzJacobiG = toeplitzG->jacobi(bToeplitzG);
-    printVector(toeplitzJacobiG);
+    map["TOEPLIZ->G - JACOBI"] = EQM(xG, toeplitzJacobiG);
     vector<double> toeplitzGaussSeidelG = toeplitzG->gaussSeidel(bToeplitzG);
-    printVector(toeplitzGaussSeidelG);
+    map["TOEPLIZ->G - SEIDEL"] = EQM(xG,toeplitzGaussSeidelG);
 
- 
+    printMap(map);
+    */
+    
     system("pause");
 
 }
